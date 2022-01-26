@@ -16,16 +16,12 @@ const App = () => {
 
   const getImages = async e => {
     e.preventDefault();
-
     setPage(1);
-    
     const inputValue = e.target.elements.query.value;
     const query = inputValue.trim();
-
     const url = `${baseUrl}&key=${apiKey}&q=${query}&page=1`;
     const data = await getData(url);
     const { total: results, hits: images } = data;
-
     if (!query) {
       setImages([]);
       setError(undefined);
