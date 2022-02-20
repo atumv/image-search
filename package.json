@@ -1,6 +1,7 @@
 {
   "name": "image-search",
   "version": "0.2.1",
+  "homepage": "http://atumv.github.io/image-search",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
