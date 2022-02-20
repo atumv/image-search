@@ -55,7 +55,7 @@ const App = () => {
     <>
       <Routes>
         <Route
-          path="/"
+          path="/image-search"
           element={
             <Home
               images={images}
