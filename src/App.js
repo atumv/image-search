@@ -1,54 +1,74 @@
-import React, { useState } from "react";
-import SearchForm from "./components/SearchForm";
-import ImageList from "./components/ImageList";
-import Error from "./components/Error";
-import { api_key, base_url } from "./variables/variables";
-import getData from "./utils/getData";
-import "./styles/style.css";
+import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { API_KEY, API_URL } from './shared/constants/apiConstants';
+import { fetchData } from './shared/utils/fetchData';
+
+import { Home } from './components/Home/Home';
+import { ImageView } from './components/ImageView/ImageView';
 
 const App = () => {
-  const [apiKey] = useState(api_key);
-  const [baseUrl] = useState(base_url);
   const [images, setImages] = useState([]);
-  const [page, setPage] = useState(undefined);
-  const [query, setQuery] = useState(undefined);
-  const [error, setError] = useState(undefined);
+  const [image, setImage] = useState(null);
+  const [page, setPage] = useState(null);
+  const [query, setQuery] = useState(null);
+  const [error, setError] = useState(null);
 
-  const getImages = async e => {
-    e.preventDefault();
+  const getImages = async (event) => {
+    event.preventDefault();
     setPage(1);
-    const inputValue = e.target.elements.query.value;
+    const inputValue = event.target.elements.query.value;
     const query = inputValue.trim();
-    const url = `${baseUrl}&key=${apiKey}&q=${query}&page=1`;
-    const data = await getData(url);
-    const { total: results, hits: images } = data;
+
     if (!query) {
       setImages([]);
-      setError(undefined);
-    } else if (!results) {
-      setImages([]);
-      setError("No images were found.");
-    } else if (results) {
-      setQuery(query);
-      setImages(images);
-      setError(undefined);
+      setError(null);
+    } else {
+      try {
+        const url = `${API_URL}&key=${API_KEY}&q=${query}&page=1`;
+        const data = await fetchData(url);
+        const results = data.total;
+        const images = data.hits;
+
+        if (!results) {
+          setImages([]);
+          setError('No images were found.');
+        } else if (results) {
+          setQuery(query);
+          setImages(images);
+          setError(null);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   const loadMore = async () => {
-    const url = `${baseUrl}&key=${apiKey}&q=${query}&page=${page + 1}`;
-    const data = await getData(url);
+    const url = `${API_URL}&key=${API_KEY}&q=${query}&page=${page + 1}`;
+    const data = await fetchData(url);
     const newImages = data.hits;
     setImages([...images, ...newImages]);
     setPage(page + 1);
   };
 
   return (
-    <div>
-      <SearchForm getImages={getImages} />
-      <ImageList images={images} loadMore={loadMore} />
-      <Error error={error} />
-    </div>
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              images={images}
+              loadMore={loadMore}
+              setImage={setImage}
+              getImages={getImages}
+              error={error}
+            />
+          }
+        />
+        <Route path="/image/:id" element={<ImageView image={image} />} />
+      </Routes>
+    </>
   );
 };
 

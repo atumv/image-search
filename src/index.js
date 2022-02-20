@@ -1,15 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import App from "./App";
-import ImageView from "./components/ImageView";
+import React from 'react';
+import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './App';
+import './styles/style.css';
 
-ReactDOM.render(
+render(
   <Router>
-    <Switch>
-      <Route path="/image-search/" exact component={App} />
-      <Route path="/image/:id" component={ImageView} />
-    </Switch>
+    <App />
   </Router>,
-  document.getElementById("root")
+  document.getElementById('root')
 );

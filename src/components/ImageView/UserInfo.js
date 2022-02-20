@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-const UserInfo = ({ image }) => (
+export const UserInfo = ({ image }) => (
   <div>
     {image.userImageURL && (
-      <img className="user-image" src={image.userImageURL} alt="user-image" />
+      <img className="user-image" src={image.userImageURL} alt={image.user} />
     )}
     <h4 className="credit">
       by&nbsp;
@@ -16,5 +16,3 @@ const UserInfo = ({ image }) => (
     </h4>
   </div>
 );
-
-export default UserInfo;
